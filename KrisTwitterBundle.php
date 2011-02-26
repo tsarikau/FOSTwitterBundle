@@ -1,6 +1,6 @@
 <?php
 
-namespace Bundle\Kris\TwitterBundle;
+namespace Kris\TwitterBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

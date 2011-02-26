@@ -5,24 +5,50 @@
     xsi:schemaLocation="http://www.symfony-project.org/schema/dic/services http://www.symfony-project.org/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="kris.twitter.class">TwitterOAuth</parameter>
-        <parameter key="kris.twitter.consumer_key">null</parameter>
-        <parameter key="kris.twitter.consumer_secret">null</parameter>
-        <parameter key="kris.twitter.anywhere.helper.class">Bundle\Kris\TwitterBundle\Templating\Helper\TwitterAnywhereHelper</parameter>
-        <parameter key="kris.twitter.anywhere.version">1</parameter>
-        <parameter key="kris.twitter.anywhere.callback_url">null</parameter>
+        <parameter key="kris_twitter.file">null</parameter>
+        <parameter key="kris_twitter.consumer_key">null</parameter>
+        <parameter key="kris_twitter.consumer_secret">null</parameter>
+        <parameter key="kris_twitter.callback_url">null</parameter>
+
+        <parameter key="kris_twitter.anywhere.helper.class">Kris\TwitterBundle\Templating\Helper\TwitterAnywhereHelper</parameter>
+        <parameter key="kris_twitter.anywhere.version">1</parameter>
+
+        <parameter key="kris_twitter.api.class">TwitterOAuth</parameter>
+        <parameter key="kris_twitter.service.class">Kris\TwitterBundle\Services\Twitter</parameter>
     </parameters>
 
     <services>
-        <service id="kris.twitter" class="%kris.twitter.class%">
-            <argument>%kris.twitter.consumer_key%</argument>
-            <argument>%kris.twitter.consumer_secret%</argument>
+        <service id="kris_twitter.service" class="%kris_twitter.service.class%" scope="request">
+            <argument type="service" id="kris_twitter.api"/>
+            <argument type="service" id="session"/>
+            <argument type="service" id="request"/>
+            <argument key="callback_url">%kris_twitter.callback_url%</argument>
         </service>
-        <service id="kris.twitter.anywhere.helper" class="%kris.twitter.anywhere.helper.class%">
+
+        <!-- This is the base API connect service, injected to the wrapper service -->
+        <service id="kris_twitter.api" class="%kris_twitter.api.class%" scope="request">
+            <file>%kris_twitter.file%</file>
+            <argument key="consumer_key">%kris_twitter.consumer_key%</argument>
+            <argument key="consumer_secret">%kris_twitter.consumer_secret%</argument>
+            <argument type="service" id="request.get.oauth_token" />
+            <argument type="service" id="session.get.oauth_token_secret" />
+        </service>
+    
+        <!-- Get session and request variables -->
+        <service id="request.get.oauth_token" factory-service="request" factory-method="get" class="%kris_twitter.api.class%">
+            <argument key="key">oauth_token</argument>
+        </service>
+
+        <service id="session.get.oauth_token_secret" factory-service="session" factory-method="get" class="%kris_twitter.api.class%">
+            <argument key="key">oauth_token_secret</argument>
+        </service>
+
+        <!-- @Anywhere Templating Helper -->
+        <service id="kris_twitter.anywhere.helper" class="%kris_twitter.anywhere.helper.class%">
             <tag name="templating.helper" alias="twitter_anywhere" />
-            <argument>%kris.twitter.consumer_key%</argument>
-            <argument>%kris.twitter.anywhere.version%</argument>
-            <argument>%kris.twitter.anywhere.callback_url%</argument>
+            <argument>%kris_twitter.consumer_key%</argument>
+            <argument>%kris_twitter.anywhere.version%</argument>
+            <argument>%kris_twitter.callback_url%</argument>
         </service>
     </services>
 </container>

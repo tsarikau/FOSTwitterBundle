@@ -1,8 +1,8 @@
 <?php
 
-namespace Bundle\Kris\TwitterBundle\Tests\DependencyInjection;
+namespace Kris\TwitterBundle\Tests\DependencyInjection;
 
-use Bundle\Kris\TwitterBundle\DependencyInjection\TwitterExtension;
+use Kris\TwitterBundle\DependencyInjection\KrisTwitterExtension;
 
 class TwitterExtensionTest extends \PHPUnit_Framework_TestCase
 {

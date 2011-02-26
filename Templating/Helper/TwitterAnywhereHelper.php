@@ -1,6 +1,6 @@
 <?php
 
-namespace Bundle\Kris\TwitterBundle\Templating\Helper;
+namespace Kris\TwitterBundle\Templating\Helper;
 
 use Symfony\Component\Templating\Helper\Helper;
 
@@ -58,16 +58,13 @@ HTML;
         foreach ($this->scripts as $script) {
             $lines .= rtrim($script, ';').";\n";
         }
-        
+
         $html = <<<HTML
 <script type="text/javascript">
-/* <![CDATA[ */
 twttr.anywhere(function(T) {
-$lines})
-/* ]]> */
+$lines});
 </script>
 HTML;
-
         return $html;
     }
 
