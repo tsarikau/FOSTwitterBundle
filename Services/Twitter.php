@@ -46,7 +46,6 @@ class Twitter {
 
     public function getAccessToken()
     {
-                var_dump($this->twitter);
         /* Check if the oauth_token is old */
         if($this->session->has('oauth_token'))
         {
