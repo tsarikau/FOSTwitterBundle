@@ -61,7 +61,7 @@ Installation
 Using Twitter @Anywhere
 -----------------------
 
->*Note:* The security component won't work with @Anywhere and has to implemented with Javascript in your view as explained in [http://dev.twitter.com/anywhere/begin](http://dev.twitter.com/anywhere/begin)
+>**Note:** The security component won't work with @Anywhere and has to implemented with Javascript in your view as explained in [http://dev.twitter.com/anywhere/begin](http://dev.twitter.com/anywhere/begin)
 
 A templating helper is included for using Twitter @Anywhere. To use it, first
 call the `->setup()` method toward the top of your DOM:
