@@ -22,6 +22,7 @@ class Configuration{
             ->scalarNode('consumer_key')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('consumer_secret')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('callback_url')->isRequired()->cannotBeEmpty()->end()
+            ->scalarNode('anywhere_version')->defaultValue('1')->end()
             ->scalarNode('alias')->defaultNull()->end();
 
         return $treeBuilder->buildTree();

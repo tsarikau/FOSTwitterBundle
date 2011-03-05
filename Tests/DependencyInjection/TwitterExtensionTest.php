@@ -7,7 +7,7 @@ use Kris\TwitterBundle\DependencyInjection\KrisTwitterExtension;
 class TwitterExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers Bundle\Kris\TwitterBundle\DependencyInjection\TwitterExtension::apiLoad
+     * @covers Kris\TwitterBundle\DependencyInjection\KrisTwitterExtension::apiLoad
      */
     public function testApiLoadLoadsDefaults()
     {
@@ -18,7 +18,7 @@ class TwitterExtensionTest extends \PHPUnit_Framework_TestCase
             ->with('kris.twitter')
             ->will($this->returnValue(false));
 
-        $extension = $this->getMockBuilder('Bundle\\Kris\\TwitterBundle\\DependencyInjection\\TwitterExtension')
+        $extension = $this->getMockBuilder('Kris\\TwitterBundle\\DependencyInjection\\KrisTwitterExtension')
             ->setMethods(array('loadDefaults'))
             ->getMock();
         $extension
@@ -30,7 +30,7 @@ class TwitterExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Bundle\Kris\TwitterBundle\DependencyInjection\TwitterExtension::apiLoad
+     * @covers Kris\TwitterBundle\DependencyInjection\KrisTwitterExtension::apiLoad
      */
     public function testApiLoadDoesNotReloadDefaults()
     {
@@ -41,7 +41,7 @@ class TwitterExtensionTest extends \PHPUnit_Framework_TestCase
             ->with('kris.twitter')
             ->will($this->returnValue(true));
 
-        $extension = $this->getMockBuilder('Bundle\\Kris\\TwitterBundle\\DependencyInjection\\TwitterExtension')
+        $extension = $this->getMockBuilder('Kris\\TwitterBundle\\DependencyInjection\\KrisTwitterExtension')
             ->setMethods(array('loadDefaults'))
             ->getMock();
         $extension

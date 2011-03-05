@@ -9,9 +9,10 @@
         <parameter key="kris_twitter.consumer_key">null</parameter>
         <parameter key="kris_twitter.consumer_secret">null</parameter>
         <parameter key="kris_twitter.callback_url">null</parameter>
-
+        <parameter key="kris_twitter.anywhere_version">1</parameter>
+        
         <parameter key="kris_twitter.anywhere.helper.class">Kris\TwitterBundle\Templating\Helper\TwitterAnywhereHelper</parameter>
-        <parameter key="kris_twitter.anywhere.version">1</parameter>
+        <parameter key="kris_twitter.anywhere.twig.class">Kris\TwitterBundle\Twig\Extension\TwitterAnywhereExtension</parameter>
 
         <parameter key="kris_twitter.api.class">TwitterOAuth</parameter>
         <parameter key="kris_twitter.service.class">Kris\TwitterBundle\Services\Twitter</parameter>
@@ -45,10 +46,15 @@
 
         <!-- @Anywhere Templating Helper -->
         <service id="kris_twitter.anywhere.helper" class="%kris_twitter.anywhere.helper.class%">
-            <tag name="templating.helper" alias="twitter_anywhere" />
+            <argument type="service" id="templating" />
             <argument>%kris_twitter.consumer_key%</argument>
-            <argument>%kris_twitter.anywhere.version%</argument>
-            <argument>%kris_twitter.callback_url%</argument>
+            <argument>%kris_twitter.anywhere_version%</argument>
         </service>
+
+        <service id="kris_twitter.anywhere.twig" class="%kris_twitter.anywhere.twig.class%">
+            <argument type="service" id="service_container" />
+            <tag name="twig.extension" />
+        </service>
+        
     </services>
 </container>

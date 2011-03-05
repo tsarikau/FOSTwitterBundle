@@ -1,0 +1,11 @@
+{% autoescape false %}
+<script type="text/javascript">
+    {% if configMap %}
+        twttr.anywhere.config({ {{ configMap }} });
+    {% endif %}
+
+    twttr.anywhere(function (T) {
+        {{ scripts }}
+    });
+</script>
+{% endautoescape %}

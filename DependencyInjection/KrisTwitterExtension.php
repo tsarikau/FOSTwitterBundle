@@ -27,7 +27,7 @@ class KrisTwitterExtension extends Extension
             $container->setAlias($config['alias'], 'kris_twitter');
         }
 
-        foreach (array('file', 'consumer_key', 'consumer_secret', 'callback_url') as $attribute) {
+        foreach (array('file', 'consumer_key', 'consumer_secret', 'callback_url', 'anywhere_version') as $attribute) {
             if (isset($config[$attribute])) {
                 $container->setParameter('kris_twitter.'.$attribute, $config[$attribute]);
             }

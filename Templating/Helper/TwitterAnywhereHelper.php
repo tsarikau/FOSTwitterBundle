@@ -3,71 +3,80 @@
 namespace Kris\TwitterBundle\Templating\Helper;
 
 use Symfony\Component\Templating\Helper\Helper;
+use Symfony\Component\Templating\EngineInterface;
 
 class TwitterAnywhereHelper extends Helper
 {
+    protected $templating;
     protected $apiKey;
     protected $version;
-    protected $callbackUrl;
+    protected $callbackURL;
 
+    protected $config = array();
     protected $scripts = array();
 
-    public function __construct($apiKey, $version = 1, $callbackUrl = null)
+    public function __construct(EngineInterface $templating, $apiKey, $version = 1)
     {
+        $this->templating = $templating;
         $this->apiKey = $apiKey;
         $this->version = $version;
-        $this->callbackUrl = $callbackUrl;
     }
 
-    public function setup()
+    /*
+     * 
+     */
+    public function setup($parameters = array(), $name = null)
     {
-        $query = http_build_query(array(
-            'id' => $this->apiKey,
-            'v'  => $this->version,
+        $name = $name ?: 'KrisTwitterBundle::setup.html.php';
+        return $this->templating->render($name, $parameters + array(
+            'apiKey'      => $this->apiKey,
+            'version'     => $this->version,
         ));
+    }
 
-        $html = <<<HTML
-<script src="http://platform.twitter.com/anywhere.js?$query"></script>
-
-HTML;
-
-        if (null !== $this->callbackUrl) {
-            $format = <<<HTML
-<script type="text/javascript">
-/* <![CDATA[ */
-twttr.anywhere.config(%s);
-/* ]]> */
-</script>
-
-HTML;
-
-            $html .= sprintf($format, json_encode(array('callbackURL' => $this->callbackUrl)));
+    /*
+     * 
+     */
+    public function initialize($parameters = array(), $name = null)
+    {
+        //convert config array to map
+        $configMap = null;
+        foreach($this->config as $key => $value){
+            $configMap .= $key.": ".$value;
         }
 
-        return $html;
+        //convert scripts into lines
+        $lines = '';
+        foreach ($this->scripts as $script) {
+            $lines .= rtrim($script, ';').";\n";
+        }        
+
+        $name = $name ?: 'KrisTwitterBundle::initialize.html.php';
+        return $this->templating->render($name, $parameters + array(
+            'configMap'     => $configMap,
+            'scripts'       => $lines,
+        ));
     }
 
+    /*
+     *
+     */
     public function queue($script)
     {
         $this->scripts[] = $script;
     }
 
-    public function initialize()
+    /*
+     * 
+     */
+    public function setConfig($key, $value)
     {
-        $lines = '';
-        foreach ($this->scripts as $script) {
-            $lines .= rtrim($script, ';').";\n";
-        }
-
-        $html = <<<HTML
-<script type="text/javascript">
-twttr.anywhere(function(T) {
-$lines});
-</script>
-HTML;
-        return $html;
+        $this->config[$key] = $value;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getName()
     {
         return 'twitter_anywhere';
