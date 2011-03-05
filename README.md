@@ -3,42 +3,60 @@ Installation
 
   1. Add this bundle and Abraham Williams' Twitter library to your project as Git submodules:
 
-          $ git submodule add git://github.com/kriswallsmith/KrisTwitterBundle.git src/Bundle/Kris/TwitterBundle
+          $ git submodule add git://github.com/kriswallsmith/KrisTwitterBundle.git src/Kris/TwitterBundle
           $ git submodule add git://github.com/abraham/twitteroauth.git src/vendor/twitteroauth
 
-  2. Add the `TwitterOAuth` class to your project's autoloader bootstrap script:
+  2. Register the namespace `Kris` to your project's autoloader bootstrap script:
 
-          // src/autoload.php
-          $loader->registerPrefixes(array(
-              'TwitterOAuth' => __DIR__.'/vendor/twitteroauth/twitteroauth',
+          //app/autoload.php
+          $loader->registerNamespaces(array(
+                // ...
+                'Kris'    => __DIR__.'/../src',
+                // ...
           ));
 
   3. Add this bundle to your application's kernel:
 
-          // application/ApplicationKernel.php
+          //app/AppKernel.php
           public function registerBundles()
           {
               return array(
                   // ...
-                  new Bundle\Kris\TwitterBundle\KrisTwitterBundle(),
+                  new Kris\TwitterBundle\KrisTwitterBundle(),
                   // ...
               );
           }
 
-  4. Configure the `twitter` service in your YAML or XML configuration:
+  4. Configure the `twitter` service in your YAML configuration:
 
-          # application/config/config.yml
-          twitter.api:
-            alias: twitter
-            consumer_key: 123456879
-            consumer_secret: s3cr3t
+        #app/config/config.yml
+        kris_twitter:
+            file: %kernel.root_dir%/../vendor/twitteroauth/twitteroauth/twitteroauth.php
+            consumer_key: xxxxxx
+            consumer_secret: xxxxxx
+            callback_url: http://www.example.com/login_check
 
-          # application/config/config.xml
-          <twitter:api
-            alias="twitter"
-            consumer_key="123456879"
-            consumer_secret="s3cr3t"
-          />
+  5. Add the following configuration to use the security component:
+
+        #app/config/config.yml
+        security:
+            factories:
+                - "%kernel.root_dir%/../src/Kris/TwitterBundle/Resources/config/security_factories.xml"
+            providers:
+                kertz_twitter:
+                    id: kris_twitter.auth
+            firewalls:
+                public:
+                    pattern:   /.*
+                    kris_twitter: true
+                    anonymous: true
+                    logout: true
+                secured:
+                    pattern:   /admin.*
+                    kris_twitter:  true
+            access_control:
+                - { path: /admin.*, role: [ROLE_USER, IS_AUTHENTICATED_FULLY] }
+                - { path: /.*, role: [ROLE_USER, IS_AUTHENTICATED_ANONYMOUSLY] }
 
 Using Twitter @Anywhere
 -----------------------
@@ -46,26 +64,37 @@ Using Twitter @Anywhere
 A templating helper is included for using Twitter @Anywhere. To use it, first
 call the `->setup()` method toward the top of your DOM:
 
+    <!-- inside a php template -->
       <?php echo $view['twitter_anywhere']->setup() ?>
+    </head>
+
+    <!-- inside a twig template -->
+      {{ twitter_anywhere_setup() }}
     </head>
 
 Once that's done, you can queue up JavaScript to be run once the library is
 actually loaded:
 
+    <!-- inside a php template -->
     <span id="twitter_connect"></span>
+    <?php $view['twitter_anywhere']->setConfig('callbackURL', '"http://dev.activitio.com/login_check/"') ?>
     <?php $view['twitter_anywhere']->queue('T("#twitter_connect").connectButton()') ?>
+
+    <!-- inside a twig template -->
+    <span id="twitter_connect"></span>
+    {{ twitter_anywhere_setConfig('callbackURL', '"http://dev.activitio.com/login_check/"') }}
+    {{ twitter_anywhere_queue('T("#twitter_connect").connectButton()') }}
 
 Finally, call the `->initialize()` method toward the bottom of the DOM:
 
+    <!-- inside a php template -->
       <?php $view['twitter_anywhere']->initialize() ?>
+    </body>
+
+    <!-- inside a twig template -->
+    {{ twitter_anywhere_initialize() }}
     </body>
 
 ### Configuring Twitter @Anywhere
 
-You can define a custom callback URL to use for the Twitter @Anywhere
-authentication process by setting a `kris.twitter.anywhere.callback_url`
-parameter in your configuration:
-
-    # application/config/config.yml
-    parameters:
-      kris.twitter.anywhere.callback_url: http://example.org/callback
+You can set configuration using the templating helper. with the setConfig() method.
