@@ -95,6 +95,8 @@ Finally, call the `->initialize()` method toward the bottom of the DOM:
     {{ twitter_anywhere_initialize() }}
     </body>
 
+The security component won't work with @Anywhere and has to implemented with Javascript in your view as explained in http://dev.twitter.com/anywhere/begin
+
 ### Configuring Twitter @Anywhere
 
 You can set configuration using the templating helper. with the setConfig() method.
