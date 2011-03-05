@@ -77,12 +77,12 @@ actually loaded:
 
     <!-- inside a php template -->
     <span id="twitter_connect"></span>
-    <?php $view['twitter_anywhere']->setConfig('callbackURL', '"http://dev.activitio.com/login_check/"') ?>
+    <?php $view['twitter_anywhere']->setConfig('callbackURL', '"http://www.example.com/login_check"') ?>
     <?php $view['twitter_anywhere']->queue('T("#twitter_connect").connectButton()') ?>
 
     <!-- inside a twig template -->
     <span id="twitter_connect"></span>
-    {{ twitter_anywhere_setConfig('callbackURL', '"http://dev.activitio.com/login_check/"') }}
+    {{ twitter_anywhere_setConfig('callbackURL', '"http://www.example.com/login_check"') }}
     {{ twitter_anywhere_queue('T("#twitter_connect").connectButton()') }}
 
 Finally, call the `->initialize()` method toward the bottom of the DOM:
