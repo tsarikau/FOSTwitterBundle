@@ -71,7 +71,7 @@ class TwitterAnywhereHelper extends Helper
      */
     public function setConfig($key, $value)
     {
-        $this->config[$key] = $value;
+        $this->config[$key] = '"'.$value.'"';
     }
 
     /**
