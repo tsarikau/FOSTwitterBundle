@@ -1,5 +1,5 @@
 <?php
-namespace Kris\TwitterBundle\Services;
+namespace FOS\TwitterBundle\Services;
 
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\HttpFoundation\Request;

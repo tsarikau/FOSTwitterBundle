@@ -1,6 +1,6 @@
 <?php
 
-namespace Kris\TwitterBundle\DependencyInjection\Security\Factory;
+namespace FOS\TwitterBundle\DependencyInjection\Security\Factory;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -21,22 +21,22 @@ class TwitterFactory extends AbstractFactory
 
     public function getKey()
     {
-        return 'kris_twitter';
+        return 'fos_twitter';
     }
 
     protected function getListenerId()
     {
-        return 'kris_twitter.security.authentication.listener';
+        return 'fos_twitter.security.authentication.listener';
     }
 
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
         // with user provider
         if (isset($config['provider'])) {
-            $authProviderId = 'kris_twitter.auth.'.$id;
+            $authProviderId = 'fos_twitter.auth.'.$id;
 
             $container
-                ->setDefinition($authProviderId, new DefinitionDecorator('kris_twitter.auth'))
+                ->setDefinition($authProviderId, new DefinitionDecorator('fos_twitter.auth'))
                 ->addArgument(new Reference($userProviderId))
                 ->addArgument(new Reference('security.account_checker'))
             ;
@@ -45,14 +45,14 @@ class TwitterFactory extends AbstractFactory
         }
 
         // without user provider
-        return 'kris_twitter.auth';
+        return 'fos_twitter.auth';
     }
 
     protected function createEntryPoint($container, $id, $config, $defaultEntryPointId)
     {
-        $entryPointId = 'kris_twitter.security.authentication.entry_point.'.$id;
+        $entryPointId = 'fos_twitter.security.authentication.entry_point.'.$id;
         $container
-            ->setDefinition($entryPointId, new DefinitionDecorator('kris_twitter.security.authentication.entry_point'))
+            ->setDefinition($entryPointId, new DefinitionDecorator('fos_twitter.security.authentication.entry_point'))
         ;
 
         return $entryPointId;

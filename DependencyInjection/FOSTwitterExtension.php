@@ -1,6 +1,6 @@
 <?php
 
-namespace Kris\TwitterBundle\DependencyInjection;
+namespace FOS\TwitterBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 
-class KrisTwitterExtension extends Extension
+class FOSTwitterExtension extends Extension
 {
     protected $resources = array(
         'twitter' => 'twitter.xml',
@@ -24,12 +24,12 @@ class KrisTwitterExtension extends Extension
         $this->loadDefaults($container);
 
         if (isset($config['alias'])) {
-            $container->setAlias($config['alias'], 'kris_twitter');
+            $container->setAlias($config['alias'], 'fos_twitter');
         }
 
         foreach (array('file', 'consumer_key', 'consumer_secret', 'callback_url', 'anywhere_version') as $attribute) {
             if (isset($config[$attribute])) {
-                $container->setParameter('kris_twitter.'.$attribute, $config[$attribute]);
+                $container->setParameter('fos_twitter.'.$attribute, $config[$attribute]);
             }
         }
     }
@@ -47,7 +47,7 @@ class KrisTwitterExtension extends Extension
      */
     public function getNamespace()
     {
-        return 'http://www.symfony-project.org/schema/dic/kris_twitter';
+        return 'http://friendsofsymfony.github.com/schema/dic/twitter';
     }
 
     /**

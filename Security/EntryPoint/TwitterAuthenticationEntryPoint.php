@@ -1,6 +1,6 @@
 <?php
 
-namespace Kris\TwitterBundle\Security\EntryPoint;
+namespace FOS\TwitterBundle\Security\EntryPoint;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\EventDispatcher\EventInterface;
 
-use Kris\TwitterBundle\Services\Twitter;
+use FOS\TwitterBundle\Services\Twitter;
 
 /**
  * TwitterAuthenticationEntryPoint starts an authentication via Twitter.

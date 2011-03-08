@@ -4,7 +4,7 @@
  * Date: 05/03/11
  */
 
-namespace Kris\TwitterBundle\Twig\Extension;
+namespace FOS\TwitterBundle\Twig\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
     
@@ -32,12 +32,12 @@ class TwitterAnywhereExtension extends \Twig_Extension
 
     public function renderSetup($parameters = array(), $name = null)
     {
-        return $this->container->get('kris_twitter.anywhere.helper')->setup($parameters, $name ?: 'KrisTwitterBundle::setup.html.twig');
+        return $this->container->get('fos_twitter.anywhere.helper')->setup($parameters, $name ?: 'FOSTwitterBundle::setup.html.twig');
     }
 
     public function renderInitialize($parameters = array(), $name = null)
     {
-        return $this->container->get('kris_twitter.anywhere.helper')->initialize($parameters, $name ?: 'KrisTwitterBundle::initialize.html.twig');
+        return $this->container->get('fos_twitter.anywhere.helper')->initialize($parameters, $name ?: 'FOSTwitterBundle::initialize.html.twig');
     }
 
      /*
@@ -45,7 +45,7 @@ class TwitterAnywhereExtension extends \Twig_Extension
      */
     public function queue($script)
     {
-        return $this->container->get('kris_twitter.anywhere.helper')->queue($script);
+        return $this->container->get('fos_twitter.anywhere.helper')->queue($script);
     }
 
     /*
@@ -53,7 +53,7 @@ class TwitterAnywhereExtension extends \Twig_Extension
      */
     public function setConfig($key, $value)
     {
-        return $this->container->get('kris_twitter.anywhere.helper')->setConfig($key, $value);
+        return $this->container->get('fos_twitter.anywhere.helper')->setConfig($key, $value);
     }
 
     /**

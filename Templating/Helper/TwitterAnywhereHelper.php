@@ -1,6 +1,6 @@
 <?php
 
-namespace Kris\TwitterBundle\Templating\Helper;
+namespace FOS\TwitterBundle\Templating\Helper;
 
 use Symfony\Component\Templating\Helper\Helper;
 use Symfony\Component\Templating\EngineInterface;
@@ -27,7 +27,7 @@ class TwitterAnywhereHelper extends Helper
      */
     public function setup($parameters = array(), $name = null)
     {
-        $name = $name ?: 'KrisTwitterBundle::setup.html.php';
+        $name = $name ?: 'FOSTwitterBundle::setup.html.php';
         return $this->templating->render($name, $parameters + array(
             'apiKey'      => $this->apiKey,
             'version'     => $this->version,
@@ -51,7 +51,7 @@ class TwitterAnywhereHelper extends Helper
             $lines .= rtrim($script, ';').";\n";
         }        
 
-        $name = $name ?: 'KrisTwitterBundle::initialize.html.php';
+        $name = $name ?: 'FOSTwitterBundle::initialize.html.php';
         return $this->templating->render($name, $parameters + array(
             'configMap'     => $configMap,
             'scripts'       => $lines,

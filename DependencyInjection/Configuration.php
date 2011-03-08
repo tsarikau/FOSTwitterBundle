@@ -1,6 +1,6 @@
 <?php
 
-namespace Kris\TwitterBundle\DependencyInjection;
+namespace FOS\TwitterBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -15,7 +15,7 @@ class Configuration{
      */
     public function getConfigTree(){
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('kris_twitter', 'array');
+        $rootNode = $treeBuilder->root('fos_twitter', 'array');
 
         $rootNode
             ->scalarNode('file')->isRequired()->cannotBeEmpty()->end()

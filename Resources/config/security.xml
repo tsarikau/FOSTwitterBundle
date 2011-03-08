@@ -5,18 +5,18 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="kris_twitter.auth" class="Kris\TwitterBundle\Security\Authentication\Provider\TwitterProvider" public="false">
-            <argument type="service" id="kris_twitter.service" strict="false"/>
+        <service id="fos_twitter.auth" class="FOS\TwitterBundle\Security\Authentication\Provider\TwitterProvider" public="false">
+            <argument type="service" id="fos_twitter.service" strict="false"/>
         </service>
 
-        <service id="kris_twitter.security.authentication.listener"
-                 class="Kris\TwitterBundle\Security\Firewall\TwitterListener"
+        <service id="fos_twitter.security.authentication.listener"
+                 class="FOS\TwitterBundle\Security\Firewall\TwitterListener"
                  parent="security.authentication.listener.abstract"
                  abstract="true">
         </service>
 
-        <service id="kris_twitter.security.authentication.entry_point" class="Kris\TwitterBundle\Security\EntryPoint\TwitterAuthenticationEntryPoint" public="false" abstract="true">
-            <argument type="service" id="kris_twitter.service" strict="false"/>
+        <service id="fos_twitter.security.authentication.entry_point" class="FOS\TwitterBundle\Security\EntryPoint\TwitterAuthenticationEntryPoint" public="false" abstract="true">
+            <argument type="service" id="fos_twitter.service" strict="false"/>
         </service>
 
     </services>

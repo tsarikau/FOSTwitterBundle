@@ -1,6 +1,6 @@
 <?php
 
-namespace Kris\TwitterBundle\Security\Authentication\Token;
+namespace FOS\TwitterBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\Token;
 

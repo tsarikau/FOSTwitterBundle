@@ -6,7 +6,7 @@
   </php>
 
   <testsuites>
-    <testsuite name="KrisTwitterBundle">
+    <testsuite name="FOSTwitterBundle">
       <directory suffix="Test.php">./Tests</directory>
     </testsuite>
   </testsuites>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kris\TwitterBundle\Security\Authentication\Provider;
+namespace FOS\TwitterBundle\Security\Authentication\Provider;
 
 use Symfony\Component\Security\Core\User\AccountInterface;
 use Symfony\Component\Security\Core\User\AccountCheckerInterface;
@@ -10,8 +10,8 @@ use Symfony\Component\Security\Core\Exception\UnsupportedAccountException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 
-use Kris\TwitterBundle\Security\Authentication\Token\TwitterUserToken;
-use Kris\TwitterBundle\Services\Twitter;
+use FOS\TwitterBundle\Security\Authentication\Token\TwitterUserToken;
+use FOS\TwitterBundle\Services\Twitter;
 
 class TwitterProvider implements AuthenticationProviderInterface
 {

@@ -7,15 +7,15 @@ Installation
 
   1. Add this bundle and Abraham Williams' Twitter library to your project as Git submodules:
 
-          $ git submodule add git://github.com/kriswallsmith/KrisTwitterBundle.git src/Kris/TwitterBundle
+          $ git submodule add git://github.com/FriendsOfSymfony/FOSTwitterBundle.git src/FOS/TwitterBundle
           $ git submodule add git://github.com/abraham/twitteroauth.git src/vendor/twitteroauth
 
-  2. Register the namespace `Kris` to your project's autoloader bootstrap script:
+  2. Register the namespace `FOS` to your project's autoloader bootstrap script:
 
           //app/autoload.php
           $loader->registerNamespaces(array(
                 // ...
-                'Kris'    => __DIR__.'/../src',
+                'FOS'    => __DIR__.'/../src',
                 // ...
           ));
 
@@ -26,7 +26,7 @@ Installation
           {
               return array(
                   // ...
-                  new Kris\TwitterBundle\KrisTwitterBundle(),
+                  new FOS\TwitterBundle\FOSTwitterBundle(),
                   // ...
               );
           }
@@ -34,7 +34,7 @@ Installation
   4. Configure the `twitter` service in your YAML configuration:
 
         #app/config/config.yml
-        kris_twitter:
+        fos_twitter:
             file: %kernel.root_dir%/../vendor/twitteroauth/twitteroauth/twitteroauth.php
             consumer_key: xxxxxx
             consumer_secret: xxxxxx
@@ -45,19 +45,19 @@ Installation
         #app/config/config.yml
         security:
             factories:
-                - "%kernel.root_dir%/../src/Kris/TwitterBundle/Resources/config/security_factories.xml"
+                - "%kernel.root_dir%/../src/FOS/TwitterBundle/Resources/config/security_factories.xml"
             providers:
-                kertz_twitter:
-                    id: kris_twitter.auth
+                fos_twitter:
+                    id: fos_twitter.auth
             firewalls:
                 public:
                     pattern:   /.*
-                    kris_twitter: true
+                    fos_twitter: true
                     anonymous: true
                     logout: true
                 secured:
                     pattern:   /admin.*
-                    kris_twitter:  true
+                    fos_twitter:  true
             access_control:
                 - { path: /admin.*, role: [ROLE_USER, IS_AUTHENTICATED_FULLY] }
                 - { path: /.*, role: [ROLE_USER, IS_AUTHENTICATED_ANONYMOUSLY] }

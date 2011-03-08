@@ -1,8 +1,8 @@
 <?php
 
-namespace Kris\TwitterBundle\Security\Firewall;
+namespace FOS\TwitterBundle\Security\Firewall;
 
-use Kris\TwitterBundle\Security\Authentication\Token\TwitterUserToken;
+use FOS\TwitterBundle\Security\Authentication\Token\TwitterUserToken;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 
 use Symfony\Component\HttpFoundation\Request;
