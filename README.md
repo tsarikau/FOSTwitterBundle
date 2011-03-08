@@ -7,7 +7,7 @@ Installation
 
   1. Add this bundle and Abraham Williams' Twitter library to your project as Git submodules:
 
-          $ git submodule add git://github.com/FriendsOfSymfony/FOSTwitterBundle.git src/FOS/TwitterBundle
+          $ git submodule add git://github.com/FriendsOfSymfony/TwitterBundle.git src/FOS/TwitterBundle
           $ git submodule add git://github.com/abraham/twitteroauth.git src/vendor/twitteroauth
 
   2. Register the namespace `FOS` to your project's autoloader bootstrap script:
