@@ -42,7 +42,7 @@ class TwitterAnywhereHelper extends Helper
         //convert config array to map
         $configMap = null;
         foreach($this->config as $key => $value){
-            $configMap .= $key.": ".$value;
+            $configMap .= $key.": ".$value.',';
         }
 
         //convert scripts into lines

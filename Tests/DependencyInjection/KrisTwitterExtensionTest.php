@@ -9,13 +9,13 @@ class TwitterExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Kris\TwitterBundle\DependencyInjection\KrisTwitterExtension::apiLoad
      */
-    public function testApiLoadLoadsDefaults()
+    public function testLoadLoadsDefaults()
     {
         $container = $this->getMock('Symfony\\Component\\DependencyInjection\\ContainerBuilder');
         $container
             ->expects($this->once())
             ->method('hasDefinition')
-            ->with('kris.twitter')
+            ->with('kris_twitter')
             ->will($this->returnValue(false));
 
         $extension = $this->getMockBuilder('Kris\\TwitterBundle\\DependencyInjection\\KrisTwitterExtension')
