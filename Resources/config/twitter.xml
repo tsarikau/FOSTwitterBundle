@@ -49,6 +49,7 @@
             <argument type="service" id="templating" />
             <argument>%fos_twitter.consumer_key%</argument>
             <argument>%fos_twitter.anywhere_version%</argument>
+            <tag name="templating.helper" alias="twitter_anywhere" />
         </service>
 
         <service id="fos_twitter.anywhere.twig" class="%fos_twitter.anywhere.twig.class%">
