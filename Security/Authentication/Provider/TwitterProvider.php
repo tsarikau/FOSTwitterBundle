@@ -2,11 +2,11 @@
 
 namespace FOS\TwitterBundle\Security\Authentication\Provider;
 
-use Symfony\Component\Security\Core\User\AccountInterface;
-use Symfony\Component\Security\Core\User\AccountCheckerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\UnsupportedAccountException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 
@@ -18,16 +18,16 @@ class TwitterProvider implements AuthenticationProviderInterface
     protected $twitter;
     protected $accessToken;
     protected $userProvider;
-    protected $accountChecker;
+    protected $userChecker;
 
-    public function __construct(Twitter $twitter, UserProviderInterface $userProvider = null, AccountCheckerInterface $accountChecker = null)
+    public function __construct(Twitter $twitter, UserProviderInterface $userProvider = null, UserCheckerInterface $userChecker = null)
     {
-        if (null !== $userProvider && null === $accountChecker) {
-            throw new \InvalidArgumentException('$accountChecker cannot be null, if $userProvider is not null.');
+        if (null !== $userProvider && null === $userChecker) {
+            throw new \InvalidArgumentException('$userChecker cannot be null, if $userProvider is not null.');
         }
         $this->twitter = $twitter;
         $this->userProvider = $userProvider;
-        $this->accountChecker = $accountChecker;
+        $this->userChecker = $userChecker;
     }
 
     public function authenticate(TokenInterface $token)
@@ -61,23 +61,23 @@ class TwitterProvider implements AuthenticationProviderInterface
         }
 
         $user = $this->userProvider->loadUserByUsername($uid);
-        if (!$user instanceof AccountInterface) {
-            throw new \RuntimeException('User provider did not return an implementation of account interface.');
+        if (!$user instanceof UserInterface) {
+            throw new \RuntimeException('User provider did not return an implementation of user interface.');
         }
 
-        $this->accountChecker->checkPreAuth($user);
-        $this->accountChecker->checkPostAuth($user);
+        $this->userChecker->checkPreAuth($user);
+        $this->userChecker->checkPostAuth($user);
 
         return new TwitterUserToken($user, $user->getRoles());
     }
 
     /**
-     * Finds a user by account
+     * Refresh a user
      *
-     * @param AccountInterface $user
+     * @param UserInterface $user
      */
-    public function loadUserByAccount(AccountInterface $user)
+    public function loadUser(UserInterface $user)
     {
-        throw new UnsupportedAccountException('Account is not supported.');
+        throw new UnsupportedUserException('User is not supported.');
     }
 }

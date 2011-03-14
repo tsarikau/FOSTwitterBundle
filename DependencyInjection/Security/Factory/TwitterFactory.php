@@ -38,7 +38,7 @@ class TwitterFactory extends AbstractFactory
             $container
                 ->setDefinition($authProviderId, new DefinitionDecorator('fos_twitter.auth'))
                 ->addArgument(new Reference($userProviderId))
-                ->addArgument(new Reference('security.account_checker'))
+                ->addArgument(new Reference('security.user_checker'))
             ;
 
             return $authProviderId;

@@ -2,9 +2,9 @@
 
 namespace FOS\TwitterBundle\Security\Authentication\Token;
 
-use Symfony\Component\Security\Core\Authentication\Token\Token;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
-class TwitterUserToken extends Token
+class TwitterUserToken extends AbstractToken
 {
     public function __construct($uid = '', array $roles = array())
     {
@@ -15,5 +15,10 @@ class TwitterUserToken extends Token
         if (!empty($uid)) {
             $this->authenticated = true;
         }
+    }
+
+    public function getCredentials()
+    {
+        return '';
     }
 }
