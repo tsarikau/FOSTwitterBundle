@@ -19,29 +19,16 @@
     </parameters>
 
     <services>
-        <service id="fos_twitter.service" class="%fos_twitter.service.class%" scope="request">
+        <service id="fos_twitter.service" class="%fos_twitter.service.class%">
             <argument type="service" id="fos_twitter.api"/>
-            <argument type="service" id="session"/>
-            <argument type="service" id="request"/>
             <argument key="callback_url">%fos_twitter.callback_url%</argument>
         </service>
 
         <!-- This is the base API connect service, injected to the wrapper service -->
-        <service id="fos_twitter.api" class="%fos_twitter.api.class%" scope="request">
+        <service id="fos_twitter.api" class="%fos_twitter.api.class%">
             <file>%fos_twitter.file%</file>
             <argument key="consumer_key">%fos_twitter.consumer_key%</argument>
             <argument key="consumer_secret">%fos_twitter.consumer_secret%</argument>
-            <argument type="service" id="request.get.oauth_token" />
-            <argument type="service" id="session.get.oauth_token_secret" />
-        </service>
-    
-        <!-- Get session and request variables -->
-        <service id="request.get.oauth_token" factory-service="request" factory-method="get" class="%fos_twitter.api.class%">
-            <argument key="key">oauth_token</argument>
-        </service>
-
-        <service id="session.get.oauth_token_secret" factory-service="session" factory-method="get" class="%fos_twitter.api.class%">
-            <argument key="key">oauth_token_secret</argument>
         </service>
 
         <!-- @Anywhere Templating Helper -->

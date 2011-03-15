@@ -6,7 +6,8 @@
 
     <services>
         <service id="fos_twitter.auth" class="FOS\TwitterBundle\Security\Authentication\Provider\TwitterProvider" public="false">
-            <argument type="service" id="fos_twitter.service" strict="false"/>
+            <argument type="service" id="fos_twitter.service"/>
+            <argument type="service" id="service_container"/>
         </service>
 
         <service id="fos_twitter.security.authentication.listener"
@@ -16,7 +17,7 @@
         </service>
 
         <service id="fos_twitter.security.authentication.entry_point" class="FOS\TwitterBundle\Security\EntryPoint\TwitterAuthenticationEntryPoint" public="false" abstract="true">
-            <argument type="service" id="fos_twitter.service" strict="false"/>
+            <argument type="service" id="fos_twitter.service"/>
         </service>
 
     </services>

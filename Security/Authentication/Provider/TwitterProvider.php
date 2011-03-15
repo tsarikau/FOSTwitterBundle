@@ -9,6 +9,8 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\Container;
 
 use FOS\TwitterBundle\Security\Authentication\Token\TwitterUserToken;
 use FOS\TwitterBundle\Services\Twitter;
@@ -19,8 +21,9 @@ class TwitterProvider implements AuthenticationProviderInterface
     protected $accessToken;
     protected $userProvider;
     protected $userChecker;
+    protected $container;
 
-    public function __construct(Twitter $twitter, UserProviderInterface $userProvider = null, UserCheckerInterface $userChecker = null)
+    public function __construct(Twitter $twitter, Container $container, UserProviderInterface $userProvider = null, UserCheckerInterface $userChecker = null)
     {
         if (null !== $userProvider && null === $userChecker) {
             throw new \InvalidArgumentException('$userChecker cannot be null, if $userProvider is not null.');
@@ -28,6 +31,7 @@ class TwitterProvider implements AuthenticationProviderInterface
         $this->twitter = $twitter;
         $this->userProvider = $userProvider;
         $this->userChecker = $userChecker;
+        $this->container = $container;
     }
 
     public function authenticate(TokenInterface $token)
@@ -37,7 +41,7 @@ class TwitterProvider implements AuthenticationProviderInterface
         }
 
         try {
-            if ($this->accessToken = $this->twitter->getAccessToken()) {
+            if ($this->accessToken = $this->twitter->getAccessToken($this->container->get('request'))) {
                 return $this->createAuthenticatedToken($this->accessToken['user_id']);
             }
         } catch (AuthenticationException $failed) {
