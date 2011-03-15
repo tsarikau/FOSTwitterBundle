@@ -13,7 +13,7 @@ class TwitterUserToken extends AbstractToken
         $this->setUser($uid);
 
         if (!empty($uid)) {
-            $this->authenticated = true;
+            $this->setAuthenticated(true);
         }
     }
 
