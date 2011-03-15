@@ -29,8 +29,7 @@ class Twitter {
         $session->set('oauth_token_secret', $requestToken['oauth_token_secret']);
 
         /* If last connection failed don't display authorization link. */
-        switch ($this->twitter->http_code)
-        {
+        switch ($this->twitter->http_code) {
             case 200:
                 /* Build authorize URL and redirect user to Twitter. */
                 $redirectURL = $this->twitter->getAuthorizeURL($requestToken);
@@ -50,10 +49,8 @@ class Twitter {
         $this->twitter->setOAuthToken($request->get('oauth_token'), $session->get('oauth_token_secret'));
 
         /* Check if the oauth_token is old */
-        if($session->has('oauth_token'))
-        {
-            if ($session->get('oauth_token') && ($session->get('oauth_token') !== $request->get('oauth_token')))
-            {
+        if ($session->has('oauth_token')) {
+            if ($session->get('oauth_token') && ($session->get('oauth_token') !== $request->get('oauth_token'))) {
                 $session->remove('oauth_token');
                 return null;
             }
@@ -71,8 +68,7 @@ class Twitter {
         !$session->has('oauth_token_secret') ?: $session->remove('oauth_token_secret', null);
 
         /* If HTTP response is 200 continue otherwise send to connect page to retry */
-        if (200 == $this->twitter->http_code)
-        {
+        if (200 == $this->twitter->http_code) {
             /* The user has been verified and the access tokens can be saved for future use */
             return $accessToken;
         }
