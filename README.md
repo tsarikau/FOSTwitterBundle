@@ -7,7 +7,7 @@ Installation
 
   1. Add this bundle and Abraham Williams' Twitter library to your project as Git submodules:
 
-          $ git submodule add git://github.com/FriendsOfSymfony/TwitterBundle.git src/FOS/TwitterBundle
+          $ git submodule add git://github.com/FriendsOfSymfony/TwitterBundle.git vendor/bundles/FOS/TwitterBundle
           $ git submodule add git://github.com/kertz/twitteroauth.git vendor/twitteroauth
 
 >**Note:** The kertz/twitteroauth is patched to be compatible with FOSTwitterBundle
@@ -17,7 +17,7 @@ Installation
           //app/autoload.php
           $loader->registerNamespaces(array(
                 // ...
-                'FOS'    => __DIR__.'/../src',
+                'FOS'    => __DIR__.'/../vendor/bundles',
                 // ...
           ));
 
@@ -47,7 +47,7 @@ Installation
             #app/config/config.yml
             security:
                 factories:
-                    fos_twitter: "%kernel.root_dir%/../src/FOS/TwitterBundle/Resources/config/security_factories.xml"
+                    fos_twitter: "%kernel.root_dir%/../vendor/bundles/FOS/TwitterBundle/Resources/config/security_factories.xml"
                 providers:
                     fos_twitter:
                         id: fos_twitter.auth
