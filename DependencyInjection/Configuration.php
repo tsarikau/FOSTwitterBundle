@@ -2,7 +2,6 @@
 
 namespace FOS\TwitterBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
 /**
@@ -15,15 +14,16 @@ class Configuration{
      */
     public function getConfigTree(){
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('fos_twitter', 'array');
+        $rootNode = $treeBuilder->root('fos_twitter');
 
         $rootNode
-            ->scalarNode('file')->isRequired()->cannotBeEmpty()->end()
-            ->scalarNode('consumer_key')->isRequired()->cannotBeEmpty()->end()
-            ->scalarNode('consumer_secret')->isRequired()->cannotBeEmpty()->end()
-            ->scalarNode('callback_url')->isRequired()->cannotBeEmpty()->end()
-            ->scalarNode('anywhere_version')->defaultValue('1')->end()
-            ->scalarNode('alias')->defaultNull()->end();
+            ->children()
+                ->scalarNode('file')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('consumer_key')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('consumer_secret')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('callback_url')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('anywhere_version')->defaultValue('1')->end()
+                ->scalarNode('alias')->defaultNull()->end();
 
         return $treeBuilder->buildTree();
     }
