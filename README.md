@@ -47,19 +47,19 @@ Installation
             #app/config/config.yml
             security:
                 factories:
-                    fos_twitter: "%kernel.root_dir%/../vendor/bundles/FOS/TwitterBundle/Resources/config/security_factories.xml"
+                  - "%kernel.root_dir%/../vendor/bundles/FOS/TwitterBundle/Resources/config/security_factories.xml"
                 providers:
                     fos_twitter:
                         id: fos_twitter.auth
                 firewalls:
+                    secured:
+                        pattern:   /secured/.*
+                        fos_twitter: true
                     public:
                         pattern:   /.*
                         anonymous: true
                         fos_twitter: true
                         logout: true
-                    secured:
-                        pattern:   /secured/.*
-                        fos_twitter: true
                 access_control:
                     - { path: /secured/*, role: [IS_AUTHENTICATED_FULLY] }
 
