@@ -61,7 +61,7 @@ Installation
                         fos_twitter: true
                         logout: true
                 access_control:
-                    - { path: /secured/*, role: [IS_AUTHENTICATED_FULLY] }
+                    - { path: /.*, role: [ROLE_USER, IS_AUTHENTICATED_ANONYMOUSLY] }
 
 Using Twitter @Anywhere
 -----------------------
