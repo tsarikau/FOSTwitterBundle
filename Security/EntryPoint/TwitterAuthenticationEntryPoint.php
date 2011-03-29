@@ -9,6 +9,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContext;
 
+use FOS\TwitterBundle\Security\Exception\ConnectionException;
 use FOS\TwitterBundle\Services\Twitter;
 
 /**
@@ -35,10 +36,10 @@ class TwitterAuthenticationEntryPoint implements AuthenticationEntryPointInterfa
     {
         $authURL = $this->twitter->getLoginUrl($request);
         if (!$authURL) {
-            throw new AuthenticationException('Could not connect to Twitter!');
+            throw new ConnectionException('Could not connect to Twitter!');
         }
         $response = new RedirectResponse($authURL);
-        
+
         return $response;
     }
 }
