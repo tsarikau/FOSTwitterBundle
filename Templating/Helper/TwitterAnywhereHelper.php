@@ -27,7 +27,7 @@ class TwitterAnywhereHelper extends Helper
      */
     public function setup($parameters = array(), $name = null)
     {
-        $name = $name ?: 'FOSTwitter::setup.html.php';
+        $name = $name ?: 'FOSTwitterBundle::setup.html.php';
         return $this->templating->render($name, $parameters + array(
             'apiKey'      => $this->apiKey,
             'version'     => $this->version,
@@ -51,7 +51,7 @@ class TwitterAnywhereHelper extends Helper
             $lines .= rtrim($script, ';').";\n";
         }        
 
-        $name = $name ?: 'FOSTwitter::initialize.html.php';
+        $name = $name ?: 'FOSTwitterBundle::initialize.html.php';
         return $this->templating->render($name, $parameters + array(
             'configMap'     => $configMap,
             'scripts'       => $lines,

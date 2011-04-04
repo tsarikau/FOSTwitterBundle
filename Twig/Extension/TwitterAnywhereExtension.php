@@ -32,12 +32,12 @@ class TwitterAnywhereExtension extends \Twig_Extension
 
     public function renderSetup($parameters = array(), $name = null)
     {
-        return $this->container->get('fos_twitter.anywhere.helper')->setup($parameters, $name ?: 'FOSTwitter::setup.html.twig');
+        return $this->container->get('fos_twitter.anywhere.helper')->setup($parameters, $name ?: 'FOSTwitterBundle::setup.html.twig');
     }
 
     public function renderInitialize($parameters = array(), $name = null)
     {
-        return $this->container->get('fos_twitter.anywhere.helper')->initialize($parameters, $name ?: 'FOSTwitter::initialize.html.twig');
+        return $this->container->get('fos_twitter.anywhere.helper')->initialize($parameters, $name ?: 'FOSTwitterBundle::initialize.html.twig');
     }
 
      /*
