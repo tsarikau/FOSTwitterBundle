@@ -2,17 +2,21 @@
 
 namespace FOS\TwitterBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder,
+    Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * Configuration for the bundle
  */
-class Configuration{
-
+class Configuration implements ConfigurationInterface
+{
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\Symfony\Component\Config\Definition\NodeInterface
+     * Generates the configuration tree.
+     *
+     * @return TreeBuilder
      */
-    public function getConfigTree(){
+    public function getConfigTreeBuilder()
+    {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('fos_twitter');
 
@@ -25,7 +29,7 @@ class Configuration{
                 ->scalarNode('anywhere_version')->defaultValue('1')->end()
                 ->scalarNode('alias')->defaultNull()->end();
 
-        return $treeBuilder->buildTree();
+        return $treeBuilder;
     }
 
 }
