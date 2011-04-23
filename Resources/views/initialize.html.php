@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    <?php if($configMap): ?>
+    <?php if ($configMap): ?>
     twttr.anywhere.config({ <?php echo $configMap ?> });
     <?php endif; ?>
 
