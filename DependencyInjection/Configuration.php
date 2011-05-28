@@ -22,12 +22,14 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('file')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('file')->defaultValue('%kernel.root_dir%/../vendor/twitteroauth/twitteroauth/twitteroauth.php')->end()
                 ->scalarNode('consumer_key')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('consumer_secret')->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('callback_url')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('callback_url')->defaultNull()->end()
                 ->scalarNode('anywhere_version')->defaultValue('1')->end()
-                ->scalarNode('alias')->defaultNull()->end();
+                ->scalarNode('alias')->defaultNull()->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }
