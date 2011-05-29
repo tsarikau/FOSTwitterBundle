@@ -28,7 +28,7 @@ class TwitterAnywhereProvider implements AuthenticationProviderInterface
             return null;
         }
 
-        if ($token->getSignature() !== sha1($token->getUser().$this->consumerSecret)) {
+        if (!$this->isSignatureValid($token->getSignature(), sha1($token->getUser().$this->consumerSecret))) {
             throw new AuthenticationException(sprintf('The presented signature was invalid.'));
         }
 
@@ -57,5 +57,19 @@ class TwitterAnywhereProvider implements AuthenticationProviderInterface
     public function supports(TokenInterface $token)
     {
         return $token instanceof TwitterAnywhereToken;
+    }
+
+    private function isSignatureValid($actual, $expected)
+    {
+        if (strlen($actual) !== $c = strlen($expected)) {
+            return false;
+        }
+
+        $result = 0;
+        for ($i = 0; $i < $c; $i++) {
+            $result |= ord($actual[$i]) ^ ord($expected[$i]);
+        }
+
+        return 0 === $result;
     }
 }
