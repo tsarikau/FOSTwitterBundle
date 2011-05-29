@@ -2,6 +2,7 @@
 
 namespace FOS\TwitterBundle\Security\Authentication\Provider;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -26,6 +27,19 @@ class TwitterAnywhereProvider implements AuthenticationProviderInterface
     {
         if (!$this->supports($token)) {
             return null;
+        }
+
+        // previously authenticated user
+        $user = $token->getUser();
+        if ($user instanceof UserInterface) {
+            if (null !== $this->checker) {
+                $this->checker->checkPostAuth($user);
+            }
+
+            $authenticated = TwitterAnywhereToken::createAuthenticated($user, $user->getRoles());
+            $authenticated->setAttributes($token->getAttributes());
+
+            return $authenticated;
         }
 
         if (!$this->isSignatureValid($token->getSignature(), sha1($token->getUser().$this->consumerSecret))) {
