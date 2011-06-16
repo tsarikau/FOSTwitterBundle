@@ -82,14 +82,4 @@ class TwitterProvider implements AuthenticationProviderInterface
 
         return new TwitterUserToken($user, $user->getRoles());
     }
-
-    /**
-     * Refresh a user
-     *
-     * @param UserInterface $user
-     */
-    public function refreshUser(UserInterface $user)
-    {
-        throw new UnsupportedUserException('User is not supported.');
-    }
 }
