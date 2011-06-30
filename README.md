@@ -7,7 +7,7 @@ Installation
 
   1. Add this bundle and Abraham Williams' Twitter library to your project as Git submodules:
 
-          $ git submodule add git://github.com/FriendsOfSymfony/TwitterBundle.git vendor/bundles/FOS/TwitterBundle
+          $ git submodule add git://github.com/FriendsOfSymfony/FOSTwitterBundle.git vendor/bundles/FOS/TwitterBundle
           $ git submodule add git://github.com/kertz/twitteroauth.git vendor/twitteroauth
 
 >**Note:** The kertz/twitteroauth is patched to be compatible with FOSTwitterBundle
@@ -105,3 +105,7 @@ Finally, call the `->initialize()` method toward the bottom of the DOM:
 ### Configuring Twitter @Anywhere
 
 You can set configuration using the templating helper. with the setConfig() method.
+
+## Advanced uses
+
+Please see the FOSFacebookBundle for documentation on creating a custom user provider.
