@@ -66,7 +66,7 @@ Installation
 Using Twitter @Anywhere
 -----------------------
 
->**Note:** If you want the Security Component to work with Twitter @Anywhere, you need to send a request to the configured check path upon successful client authentication.
+>**Note:** If you want the Security Component to work with Twitter @Anywhere, you need to send a request to the configured check path upon successful client authentication (see https://gist.github.com/1021384 for a sample configuration).
 
 A templating helper is included for using Twitter @Anywhere. To use it, first
 call the `->setup()` method toward the top of your DOM:
