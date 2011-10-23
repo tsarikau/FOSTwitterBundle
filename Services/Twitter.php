@@ -11,6 +11,8 @@
 
 namespace FOS\TwitterBundle\Services;
 
+use Symfony\Component\Routing\RouterInterface;
+
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -19,6 +21,8 @@ use \TwitterOAuth;
 class Twitter {
 
     private $twitter;
+    private $router;
+    private $callbackRoute;
     private $callbackURL;
 
     public function __construct(TwitterOAuth $twitter, $callbackURL = null)
@@ -27,12 +31,20 @@ class Twitter {
         $this->callbackURL = $callbackURL;
     }
 
+    public function setCallbackRoute(RouterInterface $router, $routeName)
+    {
+        $this->router = $router;
+        $this->callbackRoute = $routeName;
+    }
+
     public function getLoginUrl(Request $request)
     {
         $session = $request->getSession();
 
         /* Get temporary credentials. */
-        $requestToken = $this->callbackURL ? $this->twitter->getRequestToken($this->callbackURL) : $this->twitter->getRequestToken();
+        $requestToken = ($callbackUrl = $this->getCallbackUrl()) ?
+            $this->twitter->getRequestToken($callbackUrl)
+            : $this->twitter->getRequestToken();
 
         /* Save temporary credentials to session. */
         $session->set('oauth_token', $requestToken['oauth_token']);
@@ -84,6 +96,19 @@ class Twitter {
         }
 
         /* Return null for failure */
+        return null;
+    }
+
+    private function getCallbackUrl()
+    {
+        if (!empty($this->callbackURL)) {
+            return $this->callbackURL;
+        }
+
+        if (!empty($this->callbackRoute)) {
+            return $this->router->generate($this->callbackRoute, array(), true);
+        }
+
         return null;
     }
 }

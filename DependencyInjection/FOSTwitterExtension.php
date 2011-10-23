@@ -11,6 +11,8 @@
 
 namespace FOS\TwitterBundle\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\Reference;
+
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -40,6 +42,16 @@ class FOSTwitterExtension extends Extension
             if (isset($config[$attribute])) {
                 $container->setParameter('fos_twitter.'.$attribute, $config[$attribute]);
             }
+        }
+
+        if (!empty($config['callback_route'])) {
+            $container
+                ->getDefinition('fos_twitter.service')
+                ->addMethodCall('setCallbackRoute', array(
+                    new Reference('router'),
+                    $config['callback_route'],
+                ))
+            ;
         }
     }
 
