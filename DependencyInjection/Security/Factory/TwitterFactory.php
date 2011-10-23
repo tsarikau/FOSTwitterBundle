@@ -76,6 +76,20 @@ class TwitterFactory extends AbstractFactory
         return 'fos_twitter.auth';
     }
 
+    protected function createListener($container, $id, $config, $userProvider)
+    {
+        $listenerId = parent::createListener($container, $id, $config, $userProvider);
+
+        if ($config['use_twitter_anywhere']) {
+            $container
+                ->getDefinition($listenerId)
+                ->addMethodCall('setUseTwitterAnywhere', array(true))
+            ;
+        }
+
+        return $listenerId;
+    }
+
     protected function createEntryPoint($container, $id, $config, $defaultEntryPointId)
     {
         $entryPointId = 'fos_twitter.security.authentication.entry_point.'.$id;
