@@ -42,6 +42,6 @@ class TwitterListener extends AbstractAuthenticationListener
             return $this->authenticationManager->authenticate(TwitterAnywhereToken::createUnauthenticated(substr($identity, 0, $pos), substr($identity, $pos + 1)));
         }
 
-        return $this->authenticationManager->authenticate(new TwitterUserToken());
+        return $this->authenticationManager->authenticate(new TwitterUserToken($request->query->get('oauth_token'), $request->query->get('oauth_verifier')));
     }
 }

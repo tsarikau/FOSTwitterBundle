@@ -21,6 +21,7 @@
     <services>
         <service id="fos_twitter.service" class="%fos_twitter.service.class%">
             <argument type="service" id="fos_twitter.api"/>
+            <argument type="service" id="session" />
             <argument key="callback_url">%fos_twitter.callback_url%</argument>
         </service>
 

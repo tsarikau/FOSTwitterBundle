@@ -26,20 +26,19 @@ use FOS\TwitterBundle\Services\Twitter;
 class TwitterProvider implements AuthenticationProviderInterface
 {
     protected $twitter;
-    protected $accessToken;
     protected $userProvider;
     protected $userChecker;
     protected $container;
 
-    public function __construct(Twitter $twitter, Container $container, UserProviderInterface $userProvider = null, UserCheckerInterface $userChecker = null)
+    public function __construct(Twitter $twitter, UserProviderInterface $userProvider = null, UserCheckerInterface $userChecker = null)
     {
         if (null !== $userProvider && null === $userChecker) {
             throw new \InvalidArgumentException('$userChecker cannot be null, if $userProvider is not null.');
         }
+
         $this->twitter = $twitter;
         $this->userProvider = $userProvider;
         $this->userChecker = $userChecker;
-        $this->container = $container;
     }
 
     public function authenticate(TokenInterface $token)
@@ -49,8 +48,8 @@ class TwitterProvider implements AuthenticationProviderInterface
         }
 
         try {
-            if ($this->accessToken = $this->twitter->getAccessToken($this->container->get('request'))) {
-                return $this->createAuthenticatedToken($this->accessToken['user_id']);
+            if ($accessToken = $this->twitter->getAccessToken($token->getUser(), $token->getOauthVerifier())) {
+                return $this->createAuthenticatedToken($accessToken['user_id']);
             }
         } catch (AuthenticationException $failed) {
             throw $failed;
@@ -77,9 +76,8 @@ class TwitterProvider implements AuthenticationProviderInterface
             throw new \RuntimeException('User provider did not return an implementation of user interface.');
         }
 
-        $this->userChecker->checkPreAuth($user);
         $this->userChecker->checkPostAuth($user);
 
-        return new TwitterUserToken($user, $user->getRoles());
+        return new TwitterUserToken($user, null, $user->getRoles());
     }
 }
