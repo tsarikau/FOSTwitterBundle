@@ -2,9 +2,9 @@
 
 namespace FOS\TwitterBundle\Security\User;
 
-use Symfony\Component\Security\Core\User\UserManagerInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-interface TwitterUserManagerInterface extends UserManagerInterface
+interface UserManagerInterface extends UserProviderInterface
 {
     /**
      * Creates a user for the given access token.

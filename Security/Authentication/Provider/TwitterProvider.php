@@ -11,10 +11,7 @@
 
 namespace FOS\TwitterBundle\Security\Authentication\Provider;
 
-use FOS\TwitterBundle\Security\User\TwitterUserManagerInterface;
-
-use Symfony\Component\Security\Core\User\UserManagerInterface;
-
+use FOS\TwitterBundle\Security\User\UserManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -40,8 +37,8 @@ class TwitterProvider implements AuthenticationProviderInterface
             throw new \InvalidArgumentException('$userChecker cannot be null, if $userProvider is not null.');
         }
 
-        if ($createUserIfNotExists && !$userProvider instanceof TwitterUserManagerInterface) {
-            throw new \InvalidArgumentException('$userProvider must be an instanceof TwitterUserManagerInterface if createUserIfNotExists is true.');
+        if ($createUserIfNotExists && !$userProvider instanceof UserManagerInterface) {
+            throw new \InvalidArgumentException('$userProvider must be an instanceof UserManagerInterface if createUserIfNotExists is true.');
         }
 
         $this->twitter = $twitter;
