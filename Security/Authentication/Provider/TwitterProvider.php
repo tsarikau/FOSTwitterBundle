@@ -11,6 +11,8 @@
 
 namespace FOS\TwitterBundle\Security\Authentication\Provider;
 
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+
 use FOS\TwitterBundle\Security\User\UserManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
@@ -60,7 +62,7 @@ class TwitterProvider implements AuthenticationProviderInterface
         } catch (AuthenticationException $failed) {
             throw $failed;
         } catch (\Exception $failed) {
-            throw new AuthenticationException('Unknown error', $failed->getMessage(), $failed->getCode(), $failed);
+            throw new AuthenticationException($failed->getMessage(), null, $failed->getCode(), $failed);
         }
 
         throw new AuthenticationException('The Twitter user could not be retrieved from the session.');
@@ -77,19 +79,19 @@ class TwitterProvider implements AuthenticationProviderInterface
             return new TwitterUserToken($accessToken['screen_name']);
         }
 
-        $loadUser = (!$this->createUserIfNotExists || $this->userProvider
-            ->userExists($accessToken['screen_name']));
+        try {
+            $user = $this->userProvider->loadUserByUsername($accessToken['screen_name']);
+            $this->userChecker->checkPostAuth($user);
+        } catch (UsernameNotFoundException $ex) {
+            if (!$this->createUserIfNotExists) {
+                throw $ex;
+            }
 
-        $user = $loadUser ?
-            $this->userProvider->loadUserByUsername($accessToken['screen_name'])
-            : $this->userProvider->createUserFromAccessToken($accessToken);
+            $user = $this->userProvider->createUserFromAccessToken($accessToken);
+        }
 
         if (!$user instanceof UserInterface) {
             throw new \RuntimeException('User provider did not return an implementation of user interface.');
-        }
-
-        if ($loadUser) {
-            $this->userChecker->checkPostAuth($user);
         }
 
         return new TwitterUserToken($user, null, $user->getRoles());
