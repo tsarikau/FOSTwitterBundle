@@ -11,6 +11,8 @@
 
 namespace FOS\TwitterBundle\Security\Authentication\Provider;
 
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 use FOS\TwitterBundle\Security\User\UserManagerInterface;
@@ -55,9 +57,21 @@ class TwitterProvider implements AuthenticationProviderInterface
             return null;
         }
 
+        $user = $token->getUser();
+        if ($user instanceof UserInterface) {
+            // FIXME: Should we make a call to Twitter for verification?
+            $newToken = new TwitterUserToken($user, null, $user->getRoles());
+            $newToken->setAttributes($token->getAttributes());
+
+            return $newToken;
+        }
+
         try {
             if ($accessToken = $this->twitter->getAccessToken($token->getUser(), $token->getOauthVerifier())) {
-                return $this->createAuthenticatedToken($accessToken);
+                $newToken = $this->createAuthenticatedToken($accessToken);
+                $newToken->setAttributes($token->getAttributes());
+
+                return $newToken;
             }
         } catch (AuthenticationException $failed) {
             throw $failed;
