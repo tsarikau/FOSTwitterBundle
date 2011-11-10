@@ -106,6 +106,249 @@ Finally, call the `->initialize()` method toward the bottom of the DOM:
 
 You can set configuration using the templating helper. with the setConfig() method.
 
-## Advanced uses
 
-Please see the FOSFacebookBundle for documentation on creating a custom user provider.
+Example Custom User Provider using the FOSUserBundle
+-------------------------------------------------------
+
+
+To use this provider you will need to add a new service in your config.yml
+
+        my.twitter.user:
+            class: Acme\YourBundle\Security\User\Provider\TwitterProvider
+            arguments:
+                twitter: "@fos_twitter.service"
+                twitter_oauth: "@fos_twitter.api"
+                userManager: "@fos_user.user_manager"
+                validator: "@validator"
+                container: "@service_container"
+
+
+Also you would need some new properties and methods in your User model class.
+
+
+        /** 
+         * @var string
+         */
+        protected $twitterID;
+
+        /** 
+         * @var string
+         */
+        protected $twitter_username;
+
+
+        /**
+         * Set twitterID
+         *
+         * @param string $twitterID
+         */
+        public function setTwitterID($twitterID)
+        {
+            $this->twitterID = $twitterID;
+            $this->setUsername($twitterID);
+            $this->salt = '';
+        }
+
+        /**
+         * Get twitterID
+         *
+         * @return string 
+         */
+        public function getTwitterID()
+        {
+            return $this->twitterID;
+        }
+
+        /**
+         * Set twitter_username
+         *
+         * @param string $twitterUsername
+         */
+        public function setTwitterUsername($twitterUsername)
+        {
+            $this->twitter_username = $twitterUsername;
+        }
+
+        /**
+         * Get twitter_username
+         *
+         * @return string 
+         */
+        public function getTwitterUsername()
+        {
+            return $this->twitter_username;
+        }
+
+        
+And this is the TwitterProvider class
+
+        namespace Acme\YourBundle\Security\User\Provider;
+
+        use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+        use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+        use Symfony\Component\Security\Core\User\UserProviderInterface;
+        use Symfony\Component\Security\Core\User\UserInterface;
+        use Symfony\Component\DependencyInjection\Container;
+
+        use FOS\TwitterBundle\Services\Twitter;
+
+
+        class TwitterProvider implements UserProviderInterface
+        {
+        /**
+        * @var \Twitter
+        */
+        protected $twitter;
+        protected $twitter_oauth;
+        protected $userManager;
+        protected $validator;
+        protected $container;
+
+
+        public function __construct(Twitter $twitter,\TwitterOAuth $twitter_oauth, $userManager, $validator, Container $container)
+        {
+        $this->twitter = $twitter;
+        $this->twitter_oauth = $twitter_oauth;
+        $this->userManager = $userManager;
+        $this->validator = $validator;
+        $this->container = $container;
+        }
+
+        public function supportsClass($class)
+        {
+        return $this->userManager->supportsClass($class);
+        }
+
+        public function findUserByTwitterId($twitterID)
+        {
+        return $this->userManager->findUserBy(array('twitterID' => $twitterID));
+        }
+
+        public function loadUserByUsername($username)
+        {
+        $user = $this->findUserByTwitterId($username);
+
+        $request = $this->container->get('request');
+        $session = $request->getSession();
+
+
+        $this->twitter_oauth->setOAuthToken( $session->get('access_token') , $session->get('access_token_secret'));
+
+        try {
+        $info = $this->twitter_oauth->get('account/verify_credentials');
+        } catch (Exception $e) {
+        $info = null;
+        }
+
+        if (!empty($info)) {
+        if (empty($user)) {
+        $user = $this->userManager->createUser();
+        $user->setEnabled(true);
+        $user->setPassword('');
+        $user->setAlgorithm('');
+        }
+
+        $username = $info->screen_name;
+
+
+        $user->setTwitterID($info->id);
+        $user->setTwitterUsername($username);
+        $user->setEmail('');
+        $user->setFirstname($info->name);
+
+        $this->userManager->updateUser($user);
+        }
+
+        if (empty($user)) {
+        throw new UsernameNotFoundException('The user is not authenticated on twitter');
+        }
+
+
+        return $user;
+
+        }
+
+        public function refreshUser(UserInterface $user)
+        {
+        if (!$this->supportsClass(get_class($user)) || !$user->getTwitterID()) {
+        throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
+        }
+
+        return $this->loadUserByUsername($user->getTwitterID());
+        }
+        }
+
+
+Finally, to get the authentication tokens from Twitter you would need to create an action in your controller like this one.
+
+
+        /** 
+        * @Route("/connectTwitter", name="connect_twitter")
+        *
+        */
+        public function connectTwitterAction()
+        {   
+
+          $request = $this->get('request');
+          $twitter = $this->get('fos_twitter.service');
+
+          $authURL = $twitter->getLoginUrl($request);
+
+          $response = new RedirectResponse($authURL);
+
+          return $response;
+
+        }  
+
+You can create a button in your Twig template that will send the user to authenticate with Twitter.
+
+         <a href="{{ path ('connect_twitter')}}"> <img src="/images/twitterLoginButton.png"></a> 
+
+* Note: Your callback URL in your config.yml must point to your configured check_path
+
+        fos_twitter:
+            ...
+            callback_url: http://www.yoursite.com/twitter/login_check
+
+
+Remember to edit your security.yml to use this provider
+
+
+        security:
+            factories:
+                - "%kernel.root_dir%/../vendor/bundles/FOS/TwitterBundle/Resources/config/security_factories.xml"
+
+            encoders:
+                Symfony\Component\Security\Core\User\User: plaintext
+
+            role_hierarchy:
+                ROLE_ADMIN:       ROLE_USER
+                ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+            providers:
+
+                fos_userbundle:
+                    id: fos_user.user_manager
+
+                my_fos_twitter_provider:
+                    id: my.twitter.user 
+
+            firewalls:
+                dev:
+                    pattern:  ^/(_(profiler|wdt)|css|images|js)/
+                    security: false
+
+                public:
+                    pattern:  /
+                    fos_twitter:
+                        login_path: /twitter/login
+                        check_path: /twitter/login_check
+                        default_target_path: /
+                        provider: my_fos_twitter_provider
+
+                    anonymous: ~
+
+
+
+
+
