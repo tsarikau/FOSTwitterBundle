@@ -190,7 +190,8 @@ And this is the TwitterProvider class
 
 ``` php
 <?php
-// Acme\YourBundle\Security\User\Provider\TwitterProvider 
+// src/Acme/YourBundle/Security/User/Provider/TwitterProvider.php
+
 
 namespace Acme\YourBundle\Security\User\Provider;
 
