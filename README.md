@@ -113,18 +113,24 @@ Example Custom User Provider using the FOSUserBundle
 
 To use this provider you will need to add a new service in your config.yml
 
+``` yaml
+# app/config/config.yml
+
         my.twitter.user:
             class: Acme\YourBundle\Security\User\Provider\TwitterProvider
             arguments:
-                twitter: "@fos_twitter.service"
                 twitter_oauth: "@fos_twitter.api"
                 userManager: "@fos_user.user_manager"
                 validator: "@validator"
-                container: "@service_container"
-
+                session: "@session" 
+```
 
 Also you would need some new properties and methods in your User model class.
 
+``` php
+
+<?php
+// src/Acme/YourBundle/Entity/User.php
 
         /** 
          * @var string
@@ -178,109 +184,111 @@ Also you would need some new properties and methods in your User model class.
         {
             return $this->twitter_username;
         }
-
+```
         
 And this is the TwitterProvider class
 
-        namespace Acme\YourBundle\Security\User\Provider;
+``` php
+<?php
+// Acme\YourBundle\Security\User\Provider\TwitterProvider 
 
-        use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-        use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-        use Symfony\Component\Security\Core\User\UserProviderInterface;
-        use Symfony\Component\Security\Core\User\UserInterface;
-        use Symfony\Component\DependencyInjection\Container;
+namespace Acme\YourBundle\Security\User\Provider;
 
-        use FOS\TwitterBundle\Services\Twitter;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\Session;
+use \TwitterOAuth;
+use FOS\UserBundle\Entity\UserManager;
+use Symfony\Component\Validator\Validator;
 
+class TwitterProvider implements UserProviderInterface
+{
+    /** 
+     * @var \Twitter
+     */
+    protected $twitter_oauth;
+    protected $userManager;
+    protected $validator;
+    protected $session;
 
-        class TwitterProvider implements UserProviderInterface
-        {
-        /**
-        * @var \Twitter
-        */
-        protected $twitter;
-        protected $twitter_oauth;
-        protected $userManager;
-        protected $validator;
-        protected $container;
-
-
-        public function __construct(Twitter $twitter,\TwitterOAuth $twitter_oauth, $userManager, $validator, Container $container)
-        {
-        $this->twitter = $twitter;
+    public function __construct(TwitterOAuth $twitter_oauth, UserManager $userManager,Validator $validator, Session $session)
+    {   
         $this->twitter_oauth = $twitter_oauth;
         $this->userManager = $userManager;
         $this->validator = $validator;
-        $this->container = $container;
-        }
+        $this->session = $session;
+    }   
 
-        public function supportsClass($class)
-        {
+    public function supportsClass($class)
+    {   
         return $this->userManager->supportsClass($class);
-        }
+    }   
 
-        public function findUserByTwitterId($twitterID)
-        {
+    public function findUserByTwitterId($twitterID)
+    {   
         return $this->userManager->findUserBy(array('twitterID' => $twitterID));
-        }
+    }   
 
-        public function loadUserByUsername($username)
-        {
+    public function loadUserByUsername($username)
+    {
         $user = $this->findUserByTwitterId($username);
 
-        $request = $this->container->get('request');
-        $session = $request->getSession();
 
-
-        $this->twitter_oauth->setOAuthToken( $session->get('access_token') , $session->get('access_token_secret'));
+         $this->twitter_oauth->setOAuthToken( $this->session->get('access_token') , $this->session->get('access_token_secret'));
 
         try {
-        $info = $this->twitter_oauth->get('account/verify_credentials');
+             $info = $this->twitter_oauth->get('account/verify_credentials');
         } catch (Exception $e) {
-        $info = null;
+             $info = null;
         }
 
         if (!empty($info)) {
+            if (empty($user)) {
+                $user = $this->userManager->createUser();
+                $user->setEnabled(true);
+                $user->setPassword('');
+                $user->setAlgorithm('');
+            }
+
+            $username = $info->screen_name;
+
+
+            $user->setTwitterID($info->id);
+            $user->setTwitterUsername($username);
+            $user->setEmail('');
+            $user->setFirstname($info->name);
+
+            $this->userManager->updateUser($user);
+        }
+
         if (empty($user)) {
-        $user = $this->userManager->createUser();
-        $user->setEnabled(true);
-        $user->setPassword('');
-        $user->setAlgorithm('');
+            throw new UsernameNotFoundException('The user is not authenticated on twitter');
         }
-
-        $username = $info->screen_name;
-
-
-        $user->setTwitterID($info->id);
-        $user->setTwitterUsername($username);
-        $user->setEmail('');
-        $user->setFirstname($info->name);
-
-        $this->userManager->updateUser($user);
-        }
-
-        if (empty($user)) {
-        throw new UsernameNotFoundException('The user is not authenticated on twitter');
-        }
-
 
         return $user;
 
-        }
+    }
 
-        public function refreshUser(UserInterface $user)
-        {
+    public function refreshUser(UserInterface $user)
+    {
         if (!$this->supportsClass(get_class($user)) || !$user->getTwitterID()) {
-        throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
         return $this->loadUserByUsername($user->getTwitterID());
-        }
-        }
+    }
+}
+```
 
 
 Finally, to get the authentication tokens from Twitter you would need to create an action in your controller like this one.
 
+``` php
+
+<?php
+// Acme\YourBundle\Controller\DefaultController
 
         /** 
         * @Route("/connectTwitter", name="connect_twitter")
@@ -300,19 +308,30 @@ Finally, to get the authentication tokens from Twitter you would need to create 
 
         }  
 
+```
+
 You can create a button in your Twig template that will send the user to authenticate with Twitter.
 
+```
          <a href="{{ path ('connect_twitter')}}"> <img src="/images/twitterLoginButton.png"></a> 
 
+```
+
 * Note: Your callback URL in your config.yml must point to your configured check_path
+
+``` yaml
+# app/config/config.yml
 
         fos_twitter:
             ...
             callback_url: http://www.yoursite.com/twitter/login_check
-
+```
 
 Remember to edit your security.yml to use this provider
 
+
+``` yaml
+# app/config/security.yml
 
         security:
             factories:
@@ -326,9 +345,6 @@ Remember to edit your security.yml to use this provider
                 ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
             providers:
-
-                fos_userbundle:
-                    id: fos_user.user_manager
 
                 my_fos_twitter_provider:
                     id: my.twitter.user 
@@ -348,7 +364,4 @@ Remember to edit your security.yml to use this provider
 
                     anonymous: ~
 
-
-
-
-
+```
