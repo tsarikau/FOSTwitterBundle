@@ -289,7 +289,7 @@ Finally, to get the authentication tokens from Twitter you would need to create 
 ``` php
 
 <?php
-// Acme\YourBundle\Controller\DefaultController
+// src/Acme/YourBundle/Controller/DefaultController.php
 
         /** 
         * @Route("/connectTwitter", name="connect_twitter")
