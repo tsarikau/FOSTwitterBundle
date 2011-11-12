@@ -1,6 +1,13 @@
-TODO
-====
-    1. Update Tests
+Introduction
+============
+
+This Bundle enables integration with Twitter PHP. Furthermore it
+also provides a Symfony2 authentication provider so that users can login to a
+Symfony2 application via Facebook. Furthermore via custom user provider support
+the Twitter login can also be integrated with other data sources like the
+database based solution provided by FOSUserBundle.
+
+[![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSTwitterBundle.png)](http://travis-ci.org/FriendsOfSymfony/FOSTwitterBundle)
 
 Installation
 ============

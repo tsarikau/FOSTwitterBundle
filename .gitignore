@@ -1,2 +1,5 @@
 phpunit.xml
 coverage
+vendor/symfony
+vendor/twig
+vendor/twitteroauth
