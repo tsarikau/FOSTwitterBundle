@@ -7,6 +7,8 @@ Symfony2 application via Twitter. Furthermore via custom user provider support
 the Twitter login can also be integrated with other data sources like the
 database based solution provided by FOSUserBundle.
 
+``If you are using Symfony 2.0 switch to the branch v1.0 of TwitterBundle or use the tag 1.0.0``
+
 [![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSTwitterBundle.png)](http://travis-ci.org/FriendsOfSymfony/FOSTwitterBundle)
 
 Installation
