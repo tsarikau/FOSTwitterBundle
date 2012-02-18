@@ -13,7 +13,7 @@ namespace FOS\TwitterBundle\Services;
 
 use Symfony\Component\Routing\RouterInterface;
 
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use TwitterOAuth;

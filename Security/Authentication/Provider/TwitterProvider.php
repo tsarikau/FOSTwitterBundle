@@ -12,9 +12,7 @@
 namespace FOS\TwitterBundle\Security\Authentication\Provider;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-
 use FOS\TwitterBundle\Security\User\UserManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
@@ -90,7 +88,7 @@ class TwitterProvider implements AuthenticationProviderInterface
     private function createAuthenticatedToken(array $accessToken)
     {
         if (null === $this->userProvider) {
-            return new TwitterUserToken($accessToken['screen_name']);
+            return new TwitterUserToken($accessToken['screen_name'], null, array('ROLE_TWITTER_USER'));
         }
 
         try {
