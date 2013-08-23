@@ -25,6 +25,7 @@ class Twitter
     private $router;
     private $callbackRoute;
     private $callbackURL;
+    private $cache;
 
     public function __construct(TwitterOAuth $twitter, Session $session, $callbackURL = null)
     {
@@ -79,8 +80,12 @@ class Twitter
                 return null;
             }
         }
-
         /* Request access tokens from twitter */
+
+        if (!empty($this->cache[$oauthVerifier])){
+            return $this->cache[$oauthVerifier];
+        }
+        
         $accessToken = $this->twitter->getAccessToken($oauthVerifier);
 
         /* Save the access tokens. Normally these would be saved in a database for future use. */
@@ -94,7 +99,7 @@ class Twitter
         /* If HTTP response is 200 continue otherwise send to connect page to retry */
         if (200 == $this->twitter->http_code) {
             /* The user has been verified and the access tokens can be saved for future use */
-            return $accessToken;
+            return $this->cache[$oauthVerifier]=$accessToken;
         }
 
         /* Return null for failure */
